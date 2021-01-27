@@ -31,12 +31,6 @@ class FollowViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Follow.objects.filter(following=self.request.user)
 
-    def perform_create(self, serializer):
-        following = get_object_or_404(User, username=self.request.data.get(
-            'following'))
-        if serializer.is_valid():
-            serializer.save(user=self.request.user, following=following)
-
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
