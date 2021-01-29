@@ -8,7 +8,7 @@ from .models import Comment, Follow, Group, Post, User
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
+        fields = ('title',)
         model = Group
 
 
@@ -35,18 +35,11 @@ class FollowSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        user = self.context['request'].user
-        following_username = self.context['request'].data.get('following')
-        if not following_username:
-            raise ValidationError('Вы забыли указать автора для подписки')
-
+        user = attrs.get('user')
+        following_username = attrs.get('following')
         following = get_object_or_404(User, username=following_username)
         if following == user:
             raise ValidationError('Нельзя подписаться на себя')
-
-        follow = user.user.filter(following=following).count()
-        if follow:
-            raise ValidationError('Нельзя подписаться на автора дважды')
 
         return super(FollowSerializer, self).validate(attrs)
 

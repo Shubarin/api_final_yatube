@@ -37,13 +37,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def create(self, request, *args, **kwargs):
-        if not request.data.get('title'):
-            return Response('Плохой запрос', status=status.HTTP_400_BAD_REQUEST)
-        queryset = Group.objects.create(title=request.data.get('title'))
-        serializer = GroupSerializer(queryset)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
